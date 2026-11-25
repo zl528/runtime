@@ -1,4 +1,9 @@
 name: containerd for k8s autobuild
+
+permissions:
+  contents: read
+  packages: write
+
 on:
   workflow_dispatch:
     inputs:

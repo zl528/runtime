@@ -77,7 +77,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download tools and sealos
-        run: .github/scripts/download.sh
+        #run: .github/scripts/download.sh
+        run: |
+          OWNER=${{ github.repository_owner }}
+          ARCH=${{ matrix.arch }}
+          for spec in "kubernetes-v1.36.6-$ARCH:$ARCH" "sealos-v5.2.0-$ARCH:$ARCH" "sealos-v5.2.0-amd64:amd64"; do
+            TAG=${spec%%:*}
+            IMGARCH=${spec##*:}
+            docker pull ghcr.io/$OWNER/cache:$TAG
+            docker tag ghcr.io/$OWNER/cache:$TAG ghcr.io/labring-actions/cache:$TAG
+            sudo buildah pull --arch $IMGARCH ghcr.io/$OWNER/cache:$TAG
+            sudo buildah tag ghcr.io/$OWNER/cache:$TAG ghcr.io/labring-actions/cache:$TAG
+          done
 
       - name: Auto build image
         env:

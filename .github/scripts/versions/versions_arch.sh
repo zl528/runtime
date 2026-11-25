@@ -72,7 +72,8 @@ for file in "$(pwd)"/.github/versions/${part:-*}/CHANGELOG*; do
     fi
   done < <(
     until curl -sL "https://github.com/kubernetes/kubernetes/raw/master/CHANGELOG/$K8S_MD"; do sleep 3; done |
-      grep -E '^- \[v[0-9\.]+\]' | awk '{print $2}' | awk -F\[ '{print $2}' | awk -F\] '{print $1}' >".versions/$K8S_MD.cached"
+      #grep -E '^- \[v[0-9\.]+\]' | awk '{print $2}' | awk -F\[ '{print $2}' | awk -F\] '{print $1}' >".versions/$K8S_MD.cached"
+      grep -E '^- \[v[0-9\.]+\]' | awk '{print $2}' | awk -F\[ '{print $2}' | awk -F\] '{print $1}' | grep -E '^v1\.36\.6$' >".versions/$K8S_MD.cached"
     head -n 1 ".versions/$K8S_MD.cached" >".versions/$K8S_MD.latest"
     if [[ "$KUBE_TYPE" == k3s ]]; then
       git ls-remote --refs --sort="-version:refname" --tags "https://github.com/k3s-io/k3s.git" | cut -d/ -f3- | grep -E "^$(cut -d. -f-2 ".versions/$K8S_MD.latest").[0-9]+\+k3s[0-9]$" | head -n 1 >".versions/$K8S_MD.cached"

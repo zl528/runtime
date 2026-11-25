@@ -31,8 +31,9 @@ jobs:
       - name: Set sealos LatestVersion
         id: set-sealoslatest
         run: |
-          export commentbody="${{github.event.comment.body}}"
-          .github/scripts/versions/versions_sealos.sh
+          #export commentbody="${{github.event.comment.body}}"
+          #.github/scripts/versions/versions_sealos.sh
+          echo "sealoslatest=5.2.0" >> "$GITHUB_OUTPUT"
   resolve-versions-arch:
     runs-on: ubuntu-24.04
     needs:
